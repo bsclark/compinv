@@ -1,0 +1,65 @@
+# /usr/bin/mysqladmin -u root password '<some password>'
+
+# /usr/bin/mysqladmin -u root -h <db server name> password '<some password>'
+
+mysql> create user 'inventory'@'localhost' identified by '<some password>';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> GRANT SELECT,INSERT,UPDATE,DELETE on db_inventory.* to 'inventory'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+
+CREATE TABLE inv_main (id MEDIUMINT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id), servername VARCHAR(20), domainname VARCHAR(100), physical VARCHAR(1), systemtype VARCHAR(15), mainwindow VARCHAR(30), audit VARCHAR (10), pcidata VARCHAR(1), serverinstalldate DATE DEFAULT NULL, serveruse VARCHAR(5), operatingsys VARCHAR(20), ospatchlvl VARCHAR(10), lastospatch DATE DEFAULT NULL, ldap VARCHAR(1), connectsan VARCHAR(1), failovertestdate DATE DEFAULT NULL, location VARCHAR(20), securityzone VARCHAR(10), rack VARCHAR(15), pub_ipaddress VARCHAR(25), backup_ipaddress VARCHAR(25), other_ipaddress TINYTEXT, jumpserver VARCHAR(30), remoteconsole VARCHAR(30), serialnumber VARCHAR(15), vcname VARCHAR(15), model VARCHAR(15), maincontactdate DATE DEFAULT NULL, endofservicedate DATE DEFAULT NULL, cpucount TINYINT, cpuspeed VARCHAR(10), memory VARCHAR(10), bus_unit VARCHAR(20), bus_app VARCHAR(30), bus_contact VARCHAR(25), tech_contact VARCHAR(25), customer VARCHAR(30), p_admin VARCHAR(25), b_admin VARCHAR(25), audit_type VARCHAR(10), inventoryupdate DATE DEFAULT NULL);
+
+
+mysql> describe inv_main;
++-------------------+--------------+------+-----+---------+----------------+
+| Field             | Type         | Null | Key | Default | Extra          |
++-------------------+--------------+------+-----+---------+----------------+
+| id                | mediumint(9) | NO   | PRI | NULL    | auto_increment |
+| servername        | varchar(20)  | YES  |     | NULL    |                |
+| domainname        | varchar(100) | YES  |     | NULL    |                |
+| physical          | varchar(1)   | YES  |     | NULL    |                |
+| systemtype        | varchar(15)  | YES  |     | NULL    |                |
+| mainwindow        | varchar(30)  | YES  |     | NULL    |                |
+| audit             | varchar(10)  | YES  |     | NULL    |                |
+| pcidata           | varchar(1)   | YES  |     | NULL    |                |
+| serverinstalldate | date         | YES  |     | NULL    |                |
+| serveruse         | varchar(5)   | YES  |     | NULL    |                |
+| operatingsys      | varchar(20)  | YES  |     | NULL    |                |
+| ospatchlvl        | varchar(10)  | YES  |     | NULL    |                |
+| lastospatch       | date         | YES  |     | NULL    |                |
+| ldap              | varchar(1)   | YES  |     | NULL    |                |
+| connectsan        | varchar(1)   | YES  |     | NULL    |                |
+| failovertestdate  | date         | YES  |     | NULL    |                |
+| location          | varchar(20)  | YES  |     | NULL    |                |
+| securityzone      | varchar(10)  | YES  |     | NULL    |                |
+| rack              | varchar(15)  | YES  |     | NULL    |                |
+| pub_ipaddress     | varchar(25)  | YES  |     | NULL    |                |
+| backup_ipaddress  | varchar(25)  | YES  |     | NULL    |                |
+| other_ipaddress   | tinytext     | YES  |     | NULL    |                |
+| jumpserver        | varchar(30)  | YES  |     | NULL    |                |
+| remoteconsole     | varchar(30)  | YES  |     | NULL    |                |
+| serialnumber      | varchar(15)  | YES  |     | NULL    |                |
+| vcname            | varchar(15)  | YES  |     | NULL    |                |
+| model             | varchar(15)  | YES  |     | NULL    |                |
+| maincontactdate   | date         | YES  |     | NULL    |                |
+| endofservicedate  | date         | YES  |     | NULL    |                |
+| cpucount          | tinyint(4)   | YES  |     | NULL    |                |
+| cpuspeed          | varchar(10)  | YES  |     | NULL    |                |
+| memory            | varchar(10)  | YES  |     | NULL    |                |
+| bus_unit          | varchar(20)  | YES  |     | NULL    |                |
+| bus_app           | varchar(30)  | YES  |     | NULL    |                |
+| bus_contact       | varchar(25)  | YES  |     | NULL    |                |
+| tech_contact      | varchar(25)  | YES  |     | NULL    |                |
+| customer          | varchar(30)  | YES  |     | NULL    |                |
+| p_admin           | varchar(25)  | YES  |     | NULL    |                |
+| b_admin           | varchar(25)  | YES  |     | NULL    |                |
+| audit_type        | varchar(10)  | YES  |     | NULL    |                |
+| inventoryupdate   | date         | YES  |     | NULL    |                |
++-------------------+--------------+------+-----+---------+----------------+
+
+
+servername,domainname,physical,systemtype,mainwindow,audit,pcidata,serverinstalldate,serveruse,operatingsys,ospatchlvl,lastospatch,ldap,connectsan,failovertestdate,location,securityzone,rack,pub_ipaddress,backup_ipaddress,other_ipaddress,jumpserver,remoteconsole,serialnumber,vcname,model,maincontactdate,endofservicedate,cpucount,cpuspeed,memory,bus_unit,bus_app,bus_contact,tech_contact,customer,p_admin,b_admin,audit_type,inventoryupdate
+
+
