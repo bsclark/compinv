@@ -1,0 +1,265 @@
+REATE TABLE server_info (server_id SMALLINT AUTO_INCREMENT, servername VARCHAR(15), osplatform SMALLINT, patchlvl VARCHAR(15), production SET("No","Yes","N/A"), supported SET("No","Yes","N/A"), critical SET("No","Yes","N/A"), category SMALLINT, primarycustcontact SMALLINT, primfunction SMALLINT, secfunction SMALLINT, datecreated DATE, serialnum VARCHAR(80), tag VARCHAR(10), make SMALLINT, model SMALLINT, racked("No","Yes"), rackid SMALLINT, roomid SMALLINT; PRIMARY KEY (server_id));
+
+mysql> describe server_info;
++--------------------+-----------------------+------+-----+---------+----------------+
+| Field              | Type                  | Null | Key | Default | Extra          |
++--------------------+-----------------------+------+-----+---------+----------------+
+| server_id          | smallint(6)           |      | PRI | NULL    | auto_increment |
+| servername         | varchar(15)           | YES  |     | NULL    |                |
+| osplatform         | smallint(6)           | YES  |     | NULL    |                |
+| patchlvl           | varchar(15)           | YES  |     | NULL    |                |
+| production         | set('No','Yes','N/A') | YES  |     | NULL    |                |
+| supported          | set('No','Yes','N/A') | YES  |     | NULL    |                |
+| critical           | set('No','Yes','N/A') | YES  |     | NULL    |                |
+| category           | smallint(6)           | YES  |     | NULL    |                |
+| primarycustcontact | smallint(6)           | YES  |     | NULL    |                |
+| primfunction       | smallint(6)           | YES  |     | NULL    |                |
+| secfunction        | smallint(6)           | YES  |     | NULL    |                |
+| datecreated        | date                  | YES  |     | NULL    |                |
+| serialnum          | varchar(80)           | YES  |     | NULL    |                |
+| tag                | varchar(10)           | YES  |     | NULL    |                |
+| make               | smallint(6)           | YES  |     | NULL    |                |
+| model              | smallint(6)           | YES  |     | NULL    |                |
+| racked             | set('No','Yes')       | YES  |     | NULL    |                |
+| rackid             | smallint(6)           | YES  |     | NULL    |                |
+| roomid             | smallint(6)           | YES  |     | NULL    |                |
++--------------------+-----------------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE function (functionid SMALLINT AUTO_INCREMENT, fdescription VARCHAR(50), PRIMARY KEY (functionid));
+
+mysql> describe function;
++--------------+-------------+------+-----+---------+----------------+
+| Field        | Type        | Null | Key | Default | Extra          |
++--------------+-------------+------+-----+---------+----------------+
+| functionid   | smallint(6) |      | PRI | NULL    | auto_increment |
+| fdescription | varchar(50) | YES  |     | NULL    |                |
++--------------+-------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE customer (customerid SMALLINT AUTO_INCREMENT, cname VARCHAR(50), cdskphone VARCHAR(20), cmobphone VARCHAR(20), cothrphone VARCHAR(20), cemail VARCHAR(50), cnotes TINYTEXT, PRIMARY KEY (customerid));
+
+mysql> describe customer;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| customerid | smallint(6) |      | PRI | NULL    | auto_increment |
+| cname      | varchar(50) | YES  |     | NULL    |                |
+| cdskphone  | varchar(20) | YES  |     | NULL    |                |
+| cmobphone  | varchar(20) | YES  |     | NULL    |                |
+| cothrphone | varchar(20) | YES  |     | NULL    |                |
+| cemail     | varchar(50) | YES  |     | NULL    |                |
+| cnotes     | tinytext    | YES  |     | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE category (catid SMALLINT AUTO_INCREMENT, catname VARCHAR(50), PRIMARY KEY (catid));
+
+mysql> describe category;
++---------+-------------+------+-----+---------+----------------+
+| Field   | Type        | Null | Key | Default | Extra          |
++---------+-------------+------+-----+---------+----------------+
+| catid   | smallint(6) |      | PRI | NULL    | auto_increment |
+| catname | varchar(50) | YES  |     | NULL    |                |
++---------+-------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE platform (platformid SMALLINT AUTO_INCREMENT, osname VARCHAR(50), PRIMARY KEY (platformid));
+
+mysql> describe platform;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| platformid | smallint(6) |      | PRI | NULL    | auto_increment |
+| osname     | varchar(50) | YES  |     | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE make (makeid SMALLINT AUTO_INCREMENT, makename VARCHAR(100), PRIMARY KEY (makeid));
+
+mysql> describe make;
++----------+--------------+------+-----+---------+----------------+
+| Field    | Type         | Null | Key | Default | Extra          |
++----------+--------------+------+-----+---------+----------------+
+| makeid   | smallint(6)  |      | PRI | NULL    | auto_increment |
+| makename | varchar(100) | YES  |     | NULL    |                |
++----------+--------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE model (modelid SMALLINT AUTO_INCREMENT, modelname VARCHAR(100), PRIMARY KEY (modelid));
+
+mysql> describe model;
++-----------+--------------+------+-----+---------+----------------+
+| Field     | Type         | Null | Key | Default | Extra          |
++-----------+--------------+------+-----+---------+----------------+
+| modelid   | smallint(6)  |      | PRI | NULL    | auto_increment |
+| modelname | varchar(100) | YES  |     | NULL    |                |
++-----------+--------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE software (softwareid SMALLINT AUTO_INCREMENT, softname VARCHAR(100), softlicensekey TINYTEXT, softnotes TINYTEXT, softversion VARCHAR(10), PRIMARY KEY (softwareid));
+
+mysql> describe software;
++----------------+--------------+------+-----+---------+----------------+
+| Field          | Type         | Null | Key | Default | Extra          |
++----------------+--------------+------+-----+---------+----------------+
+| softwareid     | smallint(6)  |      | PRI | NULL    | auto_increment |
+| softname       | varchar(100) | YES  |     | NULL    |                |
+| softlicensekey | tinytext     | YES  |     | NULL    |                |
+| softnotes      | tinytext     | YES  |     | NULL    |                |
+| softversion    | varchar(10)  | YES  |     | NULL    |                |
++----------------+--------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE softwareonserver (onserverid MEDIUMINT AUTO_INCREMENT, serverid SMALLINT, softwareid SMALLINT, dateadd DATE, PRIMARY KEY (onserverid));
+
+mysql> describe softwareonserver;
++------------+--------------+------+-----+---------+----------------+
+| Field      | Type         | Null | Key | Default | Extra          |
++------------+--------------+------+-----+---------+----------------+
+| onserverid | mediumint(9) |      | PRI | NULL    | auto_increment |
+| serverid   | smallint(6)  | YES  |     | NULL    |                |
+| softwareid | smallint(6)  | YES  |     | NULL    |                |
+| dateadd    | date         | YES  |     | NULL    |                |
++------------+--------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE room (roomid SMALLINT AUTO_INCREMENT, roomname VARCHAR(50), roomnotes TINYTEXT, PRIMARY KEY (roomid));
+
+mysql> describe room;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| roomid    | smallint(6) |      | PRI | NULL    | auto_increment |
+| roomname  | varchar(50) | YES  |     | NULL    |                |
+| roomnotes | tinytext    | YES  |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE rack (rackid SMALLINT AUTO_INCREMENT, rackname VARCHAR(50), racknotes TINYTEXT, PRIMARY KEY (rackid));
+
+mysql> describe rack;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| rackid    | smallint(6) |      | PRI | NULL    | auto_increment |
+| rackname  | varchar(50) | YES  |     | NULL    |                |
+| racknotes | tinytext    | YES  |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE history (historyid INT AUTO_INCREMENT, serverid SMALLINT, dateofnote DATE, historynote TEXT, changemgtno VARCHAR(20), whoid SMALLINT, PRIMARY KEY (historyid));
+
+mysql> describe history;
++-------------+-------------+------+-----+---------+----------------+
+| Field       | Type        | Null | Key | Default | Extra          |
++-------------+-------------+------+-----+---------+----------------+
+| historyid   | int(11)     |      | PRI | NULL    | auto_increment |
+| serverid    | smallint(6) | YES  |     | NULL    |                |
+| dateofnote  | date        | YES  |     | NULL    |                |
+| historynote | text        | YES  |     | NULL    |                |
+| changemgtno | varchar(20) | YES  |     | NULL    |                |
+| whoid       | smallint(6) | YES  |     | NULL    |                |
++-------------+-------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE backuptype (backuptypeid SMALLINT AUTO_INCREMENT, typename VARCHAR(50), typenote TINYTEXT, PRIMARY KEY (backuptypeid));
+
+mysql> describe backuptype;
++--------------+-------------+------+-----+---------+----------------+
+| Field        | Type        | Null | Key | Default | Extra          |
++--------------+-------------+------+-----+---------+----------------+
+| backuptypeid | smallint(6) |      | PRI | NULL    | auto_increment |
+| typename     | varchar(50) | YES  |     | NULL    |                |
+| typenote     | tinytext    | YES  |     | NULL    |                |
++--------------+-------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE monitortype (monitortypeid SMALLINT AUTO_INCREMENT, typename VARCHAR(50), typenote TINYTEXT, PRIMARY KEY (monitortypeid));
+
+mysql> describe monitortype;
++---------------+-------------+------+-----+---------+----------------+
+| Field         | Type        | Null | Key | Default | Extra          |
++---------------+-------------+------+-----+---------+----------------+
+| monitortypeid | smallint(6) |      | PRI | NULL    | auto_increment |
+| typename      | varchar(50) | YES  |     | NULL    |                |
+| typenote      | tinytext    | YES  |     | NULL    |                |
++---------------+-------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE serverspec (specid INT AUTO_INCREMENT, serverid SMALLINT, biosdate DATE, firmware VARCHAR(20), ram VARCHAR(10), diskspace VARCHAR(20), totalnics VARCHAR(5), nictype SET("Single","Dual"), nicinuse VARCHAR(5), networkcomments TINYTEXT, cpu VARCHAR(30), ipaddress VARCHAR(30), PRIMARY KEY (specid));
+
+mysql> describe serverspec;
++-----------------+----------------------+------+-----+---------+----------------+
+| Field           | Type                 | Null | Key | Default | Extra          |
++-----------------+----------------------+------+-----+---------+----------------+
+| specid          | int(11)              |      | PRI | NULL    | auto_increment |
+| serverid        | smallint(6)          | YES  |     | NULL    |                |
+| biosdate        | date                 | YES  |     | NULL    |                |
+| firmware        | varchar(20)          | YES  |     | NULL    |                |
+| ram             | varchar(10)          | YES  |     | NULL    |                |
+| diskspace       | varchar(20)          | YES  |     | NULL    |                |
+| totalnics       | varchar(5)           | YES  |     | NULL    |                |
+| nictype         | set('Single','Dual') | YES  |     | NULL    |                |
+| nicinuse        | varchar(5)           | YES  |     | NULL    |                |
+| networkcomments | tinytext             | YES  |     | NULL    |                |
+| cpu             | varchar(30)          | YES  |     | NULL    |                |
+| ipaddress       | varchar(30)          | YES  |     | NULL    |                |
++-----------------+----------------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE monitor (monitorid SMALLINT AUTO_INCREMENT, supportdate DATE, monitored SET("No","Yes"), monitortype SMALLINT, serverid SMALLINT, PRIMARY KEY (monitorid));
+
+mysql> describe monitor;
++-------------+-----------------+------+-----+---------+----------------+
+| Field       | Type            | Null | Key | Default | Extra          |
++-------------+-----------------+------+-----+---------+----------------+
+| monitorid   | smallint(6)     |      | PRI | NULL    | auto_increment |
+| supportdate | date            | YES  |     | NULL    |                |
+| monitored   | set('No','Yes') | YES  |     | NULL    |                |
+| monitortype | smallint(6)     | YES  |     | NULL    |                |
+| serverid    | smallint(6)     | YES  |     | NULL    |                |
++-------------+-----------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE backup (backupid SMALLINT AUTO_INCREMENT, backuptype SMALLINT, databackuped TINYTEXT, bfrequency VARCHAR(40), retain VARCHAR(10), backedup SET("No","Yes"), serverid SMALLINT, PRIMARY KEY (backupid));
+
+mysql> describe backup;
++--------------+-----------------+------+-----+---------+----------------+
+| Field        | Type            | Null | Key | Default | Extra          |
++--------------+-----------------+------+-----+---------+----------------+
+| backupid     | smallint(6)     |      | PRI | NULL    | auto_increment |
+| backuptype   | smallint(6)     | YES  |     | NULL    |                |
+| databackuped | tinytext        | YES  |     | NULL    |                |
+| bfrequency   | varchar(40)     | YES  |     | NULL    |                |
+| retain       | varchar(10)     | YES  |     | NULL    |                |
+| backedup     | set('No','Yes') | YES  |     | NULL    |                |
+| serverid     | smallint(6)     | YES  |     | NULL    |                |
++--------------+-----------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE transactionhistory (transid INT AUTO_INCREMENT, transdate DATE, who SMALLINT, description TINYTEXT, PRIMARY KEY (transid));
+
+mysql> describe transactionhistory;
++-------------+-------------+------+-----+---------+----------------+
+| Field       | Type        | Null | Key | Default | Extra          |
++-------------+-------------+------+-----+---------+----------------+
+| transid     | int(11)     |      | PRI | NULL    | auto_increment |
+| transdate   | date        | YES  |     | NULL    |                |
+| who         | smallint(6) | YES  |     | NULL    |                |
+| description | tinytext    | YES  |     | NULL    |                |
++-------------+-------------+------+-----+---------+----------------+
+
+==============================
+CREATE TABLE user (userid SMALLINT AUTO_INCREMENT, username VARCHAR(50), userpasswd VARCHAR(20), usernotes TINYTEXT, PRIMARY KEY (userid));
+
+mysql> describe user;
++------------+-----------------+------+-----+---------+----------------+
+| Field      | Type            | Null | Key | Default | Extra          |
++------------+-----------------+------+-----+---------+----------------+
+| userid     | smallint(6)     |      | PRI | NULL    | auto_increment |
+| username   | varchar(50)     | YES  |     | NULL    |                |
+| userpasswd | varchar(20)     | YES  |     | NULL    |                |
+| usernotes  | tinytext        | YES  |     | NULL    |                |
+| useradmin  | set('No','Yes') | Yes  |     | NULL    |                |
++------------+-----------------+------+-----+---------+----------------+

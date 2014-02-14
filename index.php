@@ -1,124 +1,109 @@
 <?php
 /*
-
++------------+-----------------+------+-----+---------+----------------+
+| Field      | Type            | Null | Key | Default | Extra          |
++------------+-----------------+------+-----+---------+----------------+
+| userid     | smallint(6)     |      | PRI | NULL    | auto_increment |
+| username   | varchar(50)     | YES  |     | NULL    |                |
+| userpasswd | varchar(20)     | YES  |     | NULL    |                |
+| usernotes  | tinytext        | YES  |     | NULL    |                |
+| useradmin  | set('No','Yes') | YES  |     | NULL    |                |
++------------+-----------------+------+-----+---------+----------------+
 */
 
-include './Parts/Main.php';
+$HTTP_GET_VARS['auth'] = false;  //Assume user is not authenticated
 
-_page_top("Server Inventory","");
+//Connect to MySQL
+$db = mysql_connect("localhost","dbuser","dbuser pass") or die("Unable to connect to server: " . mysql_error());
 
-//---------------------------------------
-//DB Connect
-//---------------------------------------
-  $db = mysql_connect("localhost","inventory","<db user name>")
-        or die("Unable to connect to server: " . mysql_error());
+//Select database on MySQL server
+mysql_select_db("serverlist", $db) or die ("Unable to select database: " . mysql_error());
 
-  mysql_select_db("db_inventory", $db) or die ("Unable to select database: " . mysql_error());
-//---------------------------------------
+if (isset($HTTP_SERVER_VARS['PHP_AUTH_USER']) &&
+        isset($HTTP_SERVER_VARS['PHP_AUTH_PW'])):
 
-$sql = "SELECT COUNT(*) FROM inv_main";
-$result = mysql_query($sql, $db) or die ("Unable to execute query for login: " . mysql_error());
-$servercount = mysql_fetch_array($result);
+  //Formulate the query
+  $sql = "SELECT userid, useradmin FROM user where username=\"" . $HTTP_SERVER_VARS['PHP_AUTH_USER'] . "\" AND userpasswd = \"" . $HTTP_SERVER_VARS['PHP_AUTH_PW'] . "\"";
 
-$sql = "SELECT COUNT(*) FROM inv_main WHERE physical=\"V\"";
-$result = mysql_query($sql, $db) or die ("Unable to execute query for login: " . mysql_error());
-$novirtual = mysql_fetch_array($result);
+  //Execute the query and put result in $result
+  $result = mysql_query($sql, $db) or die ("Unable to execute query for login: " . mysql_error());
 
-$sql = "SELECT COUNT(*) FROM inv_main WHERE physical=\"P\"";
-$result = mysql_query($sql, $db) or die ("Unable to execute query for login: " . mysql_error());
-$nophysical = mysql_fetch_array($result);
+  //Get number of rows in $result
+  $num = mysql_numrows($result) or die ("Username or password doesn't exist or is wrong: " . mysql_error());
 
-$sql = "SELECT COUNT(*) FROM inv_main WHERE physical IS NULL";
-$result = mysql_query($sql, $db) or die ("Unable to execute query for login: " . mysql_error());
-$unknown_physical = mysql_fetch_array($result);
+  //Get infro from query
+  $row =  mysql_fetch_array($result);
+  $loggedinuserid = $row["userid"];
+  $loggedinadmin = $row["useradmin"];
 
-$sql = "SELECT COUNT(*) FROM inv_main WHERE serverinstalldate BETWEEN \"" . date('Y-m-d', strtotime("-30 days")) . "\" AND \"" . date('Y-m-d') . "\"";
-$result = mysql_query($sql, $db) or die ("Unable to execute query for login: " . mysql_error());
-$nothritydays = mysql_fetch_array($result);
+  //Free mysql result
+  mysql_free_result($result);
 
-echo "<h3>D' Server List</h3>\n";
-echo "<ul>\n";
-echo "  <li>Total Servers: " . $servercount['COUNT(*)'] . "</li>\n";
-echo "  <li>New Servers in last 30 days: " . $nothritydays['COUNT(*)'] . "</li>\n";
-echo "  <li># Servers Virtual: " . $novirtual['COUNT(*)'] . "</li>\n";
-echo "  <li># Servers Physical: " . $nophysical['COUNT(*)'] . "</li>\n";
-echo "  <li># Servers P/V Unknown: " . $unknown_physical['COUNT(*)'] . "</li>\n";
-echo "</ul>\n";
+//  if ($num !=0 and $loggedinadmin == "Yes"):
+  if ($num !=0):
+    //A matching row was found
+    $HTTP_GET_VARS['auth'] = true;
+  endif;
+endif;
 
+if (! $HTTP_GET_VARS['auth']):
+  header("HTTP/1.0 401 Unauthorized");
+  header("WWW-Authenticate: Basic realm=\"Server List\"");
+  echo "Authorization Required.";
+  exit;
+endif;
+
+//Page specific suff
+include "./pagetopbot.php";
 ?>
-<form action="./results.php">
-  <table>
-       <tr><td colspan="4"><b>Search by</b></td></tr>
-       <tr>
-	      <td>Host Name<input type="text" name="S_servername"></td>
-		  <td>IP Address<input type="text" name="S_ipaddress"></td>
-		  <td>Application<input type="text" name="S_appname"></td>
-		  <td><input type="submit" name="search" value="Search"></td>
-	   </tr>
-</table></form>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>Server List</title>
+<link href="MainStyle.css" rel="stylesheet" type="text/css" />
+</head>
 
-<form action="./edit.php">
-   <table class="serverlisting">
-      <thead><tr>
-         <!--<th>Edit</th>-->
-	     <th>Host Name</th>
-	     <th>Domain Name</th>
-	     <th>Use</th>
-	     <th>OS</th>
-	     <th>Patch Level</th>
-	     <th>Location</th>
-	     <th>Security Zone</th>
-	     <th>IP Address</th>
-	     <th>Backup IP</th>
-	     <th>Other IPs</th>
-	     <th>Jumpserver</th>
-	     <th>Inventory Update</th>
-      </tr></thead><tbody>
+<body>
+
+<p><h1>Server List</h1></p>
+<hr>
+<p>All Servers Function - <a href="./allserversfunction.php">Here</a>
+<br>All Servers Location - <a href="./allserverslocation.php">Here</a>
+<br>All Servers Support - <a href="./allserverssupport.php">Here</a>
+<br>All Servers Hardware - <a href="./allservershardware.php">Here</a></p>
 
 <?php
-$sql = "SELECT id, servername, domainname, serveruse, operatingsys, location, ospatchlvl, securityzone, pub_ipaddress, backup_ipaddress, other_ipaddress, jumpserver, inventoryupdate FROM inv_main ORDER BY servername";
-$result = mysql_query($sql, $db) or die ("Unable to execute query for login: " . mysql_error());
+if ($loggedinadmin == "Yes"):
+  echo "<hr>\n";
+  echo "<p>\n";
+  echo "<h3>Server Admin Pages</h3>\n";
+  echo "Server Info Administration - <a href=\"server_info.php\">Here</a><br>\n";
+  echo "Server Backup Administration - <a href=\"server-back.php\">Here</a><br>\n";
+  echo "Server Monitor Administration - <a href=\"server-mont.php\">Here</a><br>\n";
+  echo "Server Hardware Administration - <a href=\"serverspec.php\">Here</a><br>\n";
+  echo "Server Software Administration - <a href=\"serversoftware.php\">Here</a><br>\n";
+  echo "Server History  Administration - <a href=\"server-history.php\">Here</a><br>\n";
+  echo "</p>\n";
+  echo "<hr>\n";
+  echo "<p>\n";
+  echo "<h3>Database Admin Pages</h3>\n";
+  echo "Admin User Administration - <a href=\"uadmin.php\">Here</a><br>\n";
+  echo "Customer Administration - <a href=\"custadmin.php\">Here</a><br>\n";
+  echo "Function Administration - <a href=\"fadmin.php\">Here</a><br>\n";
+  echo "Category Administration - <a href=\"cadmin.php\">Here</a><br>\n";
+  echo "Platform Administration - <a href=\"padmin.php\">Here</a><br>\n";
+  echo "Make Administration - <a href=\"makeadmin.php\">Here</a><br>\n";
+  echo "Model Administration - <a href=\"modeladmin.php\">Here</a><br>\n";
+  echo "Software Administration - <a href=\"sadmin.php\">Here</a><br>\n";
+  echo "Room Administration - <a href=\"roomadmin.php\">Here</a><br>\n";
+  echo "Rack Administration - <a href=\"rackadmin.php\">Here</a><br>\n";
+  echo "Backup Type Administration - <a href=\"backuptypeadmin.php\">Here</a><br>\n";
+  echo "Monitor Type Administration - <a href=\"monitortypeadmin.php\">Here</a><br>\n";
+  echo "</p>";
+endif;
 
-$rowcolor = 0;
-
-while ($row = mysql_fetch_array($result)) {
-    if ($rowcolor == "1") {
-	    echo "<tr class=\"alt\">";
-		$rowcolor = 0;
-	} else {
-		echo "<tr>";
-		$rowcolor = 1;
-	}
-	//echo "<td class=\"checkbox\"><input type=\"checkbox\" name=\"sid\" value=\"" . $row["id"] . "\"></td>";
-	echo "<td><a href=\"./fullserver.php?sid=" . $row["id"] . "\">" . $row["servername"] . "</a></td>";
-	echo "<td>" . $row["domainname"] . "</td>";
-	echo "<td>" . $row["serveruse"] . "</td>";
-	echo "<td>" . $row["operatingsys"] . "</td>";
-	echo "<td>" . $row["ospatchlvl"] . "</td>";
-	echo "<td>" . $row["location"] . "</td>";
-	echo "<td>" . $row["securityzone"] . "</td>";
-	echo "<td>" . $row["pub_ipaddress"] . "</td>";
-	echo "<td>" . $row["backup_ipaddress"] . "</td>";
-	echo "<td>" . $row["other_ipaddress"] . "</td>";
-	echo "<td>" . $row["jumpserver"] . "</td>";
-	echo "<td>" . $row["inventoryupdate"] . "</td>";
-	echo "</tr>";
-}
-
-//echo "</tbody></table><br /><input type=\"submit\" value=\"Edit\"></form>\n";
-echo "</tbody></table></form>\n";
-  
-_page_bot();
-
-//---------------------------------------
-//Free mysql result
-//---------------------------------------
-mysql_free_result($result);
-//---------------------------------------
-
-//---------------------------------------
-//Close Database Connection
-//---------------------------------------
-mysql_close($db);
-//---------------------------------------
+//Page bottom
+pbottom();
 ?>
+</body>
+</html>

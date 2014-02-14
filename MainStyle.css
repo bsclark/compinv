@@ -1,0 +1,23 @@
+a:link {
+	color: blue;
+}
+a:visited {
+	color: red;
+}
+body {
+	color: black;
+	background-color: white;
+	font-family: verdana, helvetica;
+}
+li {
+	color: purple;
+}
+hr {
+	width: 90%;
+}
+table.all {
+	font-size: x-small;
+}
+p.copy {
+	font-size: xx-small;
+}

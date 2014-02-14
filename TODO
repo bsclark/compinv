@@ -1,0 +1,10 @@
+Stuff left to do
+=======================
+Create list of only supported servers
+Add Transaction History to all mod pages and adds it to the history table to track who did what when
+Add Error checking to ensure null or improper data isn't being added
+Server Quick Stats page
+  1. # servers by os
+  2. software installed #'s
+Add software details page
+Add pop-ups to define terms used
